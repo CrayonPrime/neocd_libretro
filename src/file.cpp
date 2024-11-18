@@ -1,7 +1,23 @@
 #include <algorithm>
-#include <retro_miscellaneous.h>
 
 #include "file.h"
+
+// Specifies the initial size of the readline buffer. The buffer is allocated on the heap. The size of
+// the buffer grows per std:string allocation rules, which typically doubles the allocation size each
+// time more memory is needed. This may be configured by the build system in case target platform is
+// sensitive to heap size allocations.
+#if !defined(FILE_READLINE_INITIAL_ALLOC_SIZE)
+#   define FILE_READLINE_INITIAL_ALLOC_SIZE  512
+#endif
+
+// Maximum size of a line while calling file ReadLine. Any line longer than this is truncated and the
+// remainder would be read in the next call to ReadLine. Note that the actual amount of memory used
+// during ReadLine will likely be 1.5 to 2x larger than this value (varies depending on underlying
+// std::string implementation).
+#if !defined(FILE_READLINE_MAX_LENGTH)
+#   define FILE_READLINE_MAX_LENGTH     8192
+#endif
+
 
 File::File() :
     AbstractFile(),
@@ -117,14 +133,15 @@ size_t File::readAudio(void* data, size_t size)
 
 std::string File::readLine()
 {
+    std::string result;
+
     if (!isOpen())
-        return std::string();
-        
-    char buffer[PATH_MAX_LENGTH];
-    
+        return result;
+
+    result.reserve(FILE_READLINE_INITIAL_ALLOC_SIZE);
+   
     int c;
-    int len = sizeof(buffer) - 1;
-    char* p = buffer;
+    int len = FILE_READLINE_MAX_LENGTH - 1;
 
     for(len--; len > 0; len--)
     {
@@ -136,10 +153,8 @@ std::string File::readLine()
         if ((c == EOF) || (c == '\n'))
             break;
 
-        *p++ = c;
+        result += c;
     }
 
-    *p++ = 0;
-
-    return std::string(buffer);
+    return result;
 }
