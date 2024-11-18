@@ -14,17 +14,31 @@
         #define _CRT_SECURE_NO_WARNINGS
 #endif
 
-#define FOPEN_FUNC(filename, mode) rfopen(filename, mode)
-#define FTELLO_FUNC(stream) rftell(stream)
-#define FSEEKO_FUNC(stream, offset, origin) rfseek(stream, offset, origin)
 
 #include "ioapi.h"
 
+#ifdef USE_LIBRETRO_VFS
+#define FOPEN_FUNC(filename, mode) rfopen(filename, mode)
+#define FTELLO_FUNC(stream) rftell(stream)
+#define FSEEKO_FUNC(stream, offset, origin) rfseek(stream, offset, origin)
 /* Forward declarations */
 int64_t rfread(void* buffer,
    size_t elem_size, size_t elem_count, RFILE* stream);
 int64_t rfwrite(void const* buffer,
    size_t elem_size, size_t elem_count, RFILE* stream);
+#else
+#	include <stdio.h>
+
+#define FOPEN_FUNC(filename, mode) fopen(filename, mode)
+#define FTELLO_FUNC(stream) ftell(stream)
+#define FSEEKO_FUNC(stream, offset, origin) fseek(stream, offset, origin)
+
+#	define rfread  fread
+#	define rfwrite fwrite
+#	define rftell  ftell
+#	define rfseek  fseek
+#	define RFILE   FILE
+#endif
 
 voidpf call_zopen64 (const zlib_filefunc64_32_def* pfilefunc,const void*filename,int mode)
 {
@@ -101,7 +115,7 @@ static voidpf ZCALLBACK fopen_file_func (voidpf opaque, const char* filename, in
         mode_fopen = "wb";
 
     if ((filename) && (mode_fopen))
-        file = rfopen(filename, mode_fopen);
+        file = fopen(filename, mode_fopen);
     return file;
 }
 

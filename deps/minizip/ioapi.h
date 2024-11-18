@@ -43,12 +43,13 @@
 
 #include <stdint.h>
 #include <stdlib.h>
-#include <streams/file_stream.h>
 #include "zlib.h"
 
 /* Maximum unsigned 32-bit value used as placeholder for zip64 */
 #define MAXU32 0xffffffff
 
+#ifdef USE_LIBRETRO_VFS
+#include <streams/file_stream.h>
 extern RFILE* rfopen(const char *path, const char *mode);
 extern int64_t rftell(RFILE* stream);
 extern int64_t rfseek(RFILE* stream, int64_t offset, int origin);
@@ -56,6 +57,7 @@ extern int64_t rfseek(RFILE* stream, int64_t offset, int origin);
 #define fopen64 rfopen
 #define ftello64 rftell
 #define fseeko64 rfseek
+#endif
 
 #ifdef HAVE_MINIZIP64_CONF_H
 #include "mz64conf.h"
