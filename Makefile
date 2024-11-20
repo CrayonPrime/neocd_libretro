@@ -254,8 +254,12 @@ ifneq ($(GIT_VERSION)," unknown")
 	CXXFLAGS += -DGIT_VERSION=\"$(GIT_VERSION)\"
 endif
 
-CFLAGS += -fno-ident -DHAVE_ZLIB -DZ7_ST -DHAVE_FLAC -DZSTD_DISABLE_ASM -DUSE_LIBRETRO_VFS
-CXXFLAGS += -std=c++14 -fno-exceptions -fno-rtti -fno-ident -DHAVE_ZLIB -DZ7_ST -DHAVE_FLAC -DZSTD_DISABLE_ASM -DUSE_LIBRETRO_VFS
+CFLAGS += -fno-ident -DHAVE_ZLIB -DZ7_ST -DHAVE_FLAC -DZSTD_DISABLE_ASM
+CXXFLAGS += -std=c++14 -fno-exceptions -fno-rtti -fno-ident -DHAVE_ZLIB -DZ7_ST -DHAVE_FLAC -DZSTD_DISABLE_ASM
+
+# bizhawk: we don't want the over-engineered VFS layer.
+#CFLAGS += -DUSE_LIBRETRO_VFS
+#CXXFLAGS += -DUSE_LIBRETRO_VFS
 
 include Makefile.common
 
@@ -272,6 +276,7 @@ ifeq ($(STATIC_LINKING), 1)
 else
 	@$(if $(Q), $(shell echo echo LD $@),)
 	$(CXX) $(fpic) $(SHARED) -o $@ $(OBJECTS) $(LIBS) $(LDFLAGS)
+	ln -f neocd_libretro.dll ../../Assets/dll
 endif
 
 

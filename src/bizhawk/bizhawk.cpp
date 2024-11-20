@@ -22,7 +22,7 @@ void Libretro::Log::message(retro_log_level level, const char* format, ...)
 
     va_list args;
     va_start(args, format);
-    int result = vfprintf(destpipe, format, args);
+    vfprintf(destpipe, format, args);
     va_end(args);
 }
 

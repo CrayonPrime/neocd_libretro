@@ -11,8 +11,6 @@ ZSTD_DIR             = $(LIBCHDR_DIR)/deps/zstd-1.5.6
 INCFLAGS :=  \
 	-I$(CORE_DIR)/src/bizhawk \
 	-I$(CORE_DIR)/src \
-	-I$(LIBRETRO_COMM_DIR)/include \
-	-I$(LIBRETRO_DEPS_DIR)/ \
 	-I$(LIBCHDR_DIR)/include \
 	-I$(LZMA_DIR)/include \
 	-I$(LIBOGG_DIR)/include \
@@ -28,9 +26,6 @@ INCFLAGS :=  \
 	-I$(LIBRETRO_DEPS_DIR)
 
 
-#	$(CORE_DIR)/src/archive.cpp \
-#	$(CORE_DIR)/src/archivezip.cpp \
-
 SOURCES_CXX :=\
 	$(CORE_DIR)/src/audio.cpp \
 	$(CORE_DIR)/src/bios.cpp \
@@ -43,14 +38,6 @@ SOURCES_CXX :=\
 	$(CORE_DIR)/src/flacfile.cpp \
 	$(CORE_DIR)/src/input.cpp \
 	$(CORE_DIR)/src/lc8951.cpp \
-	$(CORE_DIR)/src/libretro_backupram.cpp \
-	$(CORE_DIR)/src/libretro_bios.cpp \
-	$(CORE_DIR)/src/libretro_common.cpp \
-	$(CORE_DIR)/src/libretro_input.cpp \
-	$(CORE_DIR)/src/libretro_log.cpp \
-	$(CORE_DIR)/src/libretro_memmap.cpp \
-	$(CORE_DIR)/src/libretro_variables.cpp \
-	$(CORE_DIR)/src/libretro.cpp \
 	$(CORE_DIR)/src/m68kintf.cpp \
 	$(CORE_DIR)/src/memory_backupram.cpp \
 	$(CORE_DIR)/src/memory_cdintf.cpp \
@@ -63,7 +50,6 @@ SOURCES_CXX :=\
 	$(CORE_DIR)/src/memory.cpp \
 	$(CORE_DIR)/src/neogeocd.cpp \
 	$(CORE_DIR)/src/oggfile.cpp \
-	$(CORE_DIR)/src/path.cpp \
 	$(CORE_DIR)/src/timeprofiler.cpp \
 	$(CORE_DIR)/src/timer.cpp \
 	$(CORE_DIR)/src/timergroup.cpp \
@@ -71,10 +57,20 @@ SOURCES_CXX :=\
 	$(CORE_DIR)/src/wavfile.cpp \
 	$(CORE_DIR)/src/z80intf.cpp
 
+# Bizhawk doesn't need this... ? (unconfirmed)
+#SOURCES_CXX += \
+	$(CORE_DIR)/src/archive.cpp \
+	$(CORE_DIR)/src/archivezip.cpp \
+	$(CORE_DIR)/src/path.cpp
+
 SOURCES_CXX += \
 	${CORE_DIR}/src/3rdparty/ym/ym2610.cpp \
 	${CORE_DIR}/src/3rdparty/z80/z80.cpp \
 	${CORE_DIR}/src/3rdparty/z80/z80daisy.cpp
+
+SOURCES_CXX += \
+	${CORE_DIR}/src/bizhawk/bizhawk.cpp
+
 
 SOURCES_C := \
 	$(CORE_DIR)/src/3rdparty/musashi/m68kcpu.c \
@@ -88,7 +84,8 @@ SOURCES_C += \
 	$(LIBCHDR_DIR)/src/libchdr_flac.c \
 	$(LIBCHDR_DIR)/src/libchdr_huffman.c
 
-SRC_LIBRETRO_COMMON = \
+# bizhawk: no libretro please.
+#SRC_LIBRETRO_COMMON = \
 	$(LIBRETRO_COMM_DIR)/compat/compat_posix_string.c \
 	$(LIBRETRO_COMM_DIR)/compat/compat_strcasestr.c \
 	$(LIBRETRO_COMM_DIR)/compat/compat_strl.c \
@@ -112,7 +109,7 @@ SRC_LIBRETRO_COMMON = \
 	$(LIBRETRO_COMM_DIR)/vfs/vfs_implementation.c
 
 ifeq ($(HAVE_CDROM), 1)
-SRC_LIBRETRO_COMMON += \
+#SRC_LIBRETRO_COMMON += \
 	 $(LIBRETRO_COMM_DIR)/cdrom/cdrom.c \
 	 $(LIBRETRO_COMM_DIR)/vfs/vfs_implementation_cdrom.c
 endif
