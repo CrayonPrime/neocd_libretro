@@ -9,6 +9,7 @@ LZMA_DIR             = $(LIBCHDR_DIR)/deps/lzma-24.05
 ZSTD_DIR             = $(LIBCHDR_DIR)/deps/zstd-1.5.6
 
 INCFLAGS :=  \
+	-I$(CORE_DIR)/src/bizhawk \
 	-I$(CORE_DIR)/src \
 	-I$(LIBRETRO_COMM_DIR)/include \
 	-I$(LIBRETRO_DEPS_DIR)/ \
@@ -19,11 +20,18 @@ INCFLAGS :=  \
 	-I$(LIBVORBIS_DIR)/lib \
 	-I$(ZLIB_DIR) \
 	-I$(MINIZIP_DIR) \
-	-I$(ZSTD_DIR)/lib 
+	-I$(ZSTD_DIR)/lib \
+	-I$(LIBRETRO_COMM_DIR)/include
+
+# Bizhawk: don't want libretro stuff.
+#INCFLAGS +=  \
+	-I$(LIBRETRO_DEPS_DIR)
+
+
+#	$(CORE_DIR)/src/archive.cpp \
+#	$(CORE_DIR)/src/archivezip.cpp \
 
 SOURCES_CXX :=\
-	$(CORE_DIR)/src/archive.cpp \
-	$(CORE_DIR)/src/archivezip.cpp \
 	$(CORE_DIR)/src/audio.cpp \
 	$(CORE_DIR)/src/bios.cpp \
 	$(CORE_DIR)/src/cdrom.cpp \
@@ -109,7 +117,7 @@ SRC_LIBRETRO_COMMON += \
 	 $(LIBRETRO_COMM_DIR)/vfs/vfs_implementation_cdrom.c
 endif
 
-SRC_LIBRETRO_COMMON += \
+#SRC_LIBRETRO_COMMON += \
 	$(LZMA_DIR)/src/Alloc.c \
 	$(LZMA_DIR)/src/Bra.c \
 	$(LZMA_DIR)/src/Bra86.c \
