@@ -110,7 +110,7 @@
 
 #include "ym2610.h"
 #include "../../neogeocd.h"
-#include "../../libretro_common.h"
+#include "libretro_common.h"
 #include "../../datapacker.h"
 
 #define logerror(...)
